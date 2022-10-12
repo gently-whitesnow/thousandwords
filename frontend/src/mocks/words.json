@@ -1,0 +1,67 @@
+{
+    "user_level": "10",
+    "words": [
+      {
+        "word_id": 1,
+        "f_lang": "absolute",
+        "n_lang": "абсолютный"
+      },
+      {
+        "word_id": 2,
+        "f_lang": "accept",
+        "n_lang": "принять"
+      },
+      {
+        "word_id": 3,
+        "f_lang": "account",
+        "n_lang": "счет"
+      },
+      {
+        "word_id": 4,
+        "f_lang": "accountant",
+        "n_lang": "бухгалтер"
+      },
+      {
+        "word_id": 5,
+        "f_lang": "achieve",
+        "n_lang": "достигнуть"
+      },
+      {
+        "word_id": 6,
+        "f_lang": "acquire",
+        "n_lang": "приобрести"
+      }
+    ],
+    "other_words": [
+      {
+        "word_id": 7,
+        "f_lang": "test1",
+        "n_lang": "тест1"
+      },
+      {
+        "word_id": 8,
+        "f_lang": "test2",
+        "n_lang": "тест2"
+      },
+      {
+        "word_id": 9,
+        "f_lang": "test3",
+        "n_lang": "тест3"
+      },
+      {
+        "word_id": 10,
+        "f_lang": "test4",
+        "n_lang": "тест4"
+      },
+      {
+        "word_id": 11,
+        "f_lang": "test5",
+        "n_lang": "тест5"
+      },
+      {
+        "word_id": 12,
+        "f_lang": "test6",
+        "n_lang": "тест6"
+      }
+    ]
+  }

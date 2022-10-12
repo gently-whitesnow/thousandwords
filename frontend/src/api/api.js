@@ -16,8 +16,7 @@ export class Api {
     return clientResult;
   };
 
-  getUser = (id) => this.clientWrapper("get", `api/auth?id=${id}`);
-  
+  getWords = (count) => this.clientWrapper("get", `api/words?count=${count}`);
 }
 const api = new Api();
 
