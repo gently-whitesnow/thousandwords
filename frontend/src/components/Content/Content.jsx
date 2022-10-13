@@ -6,21 +6,28 @@ import LevelBar from "../LevelBar";
 import LevelNumber from "../LevelNumber";
 import { useStore } from "../../store";
 import MindWord from "../MindWord";
+import Auth from "../Auth";
 
 const Content = () => {
-  const { wordsStore } = useStore();
+  const { wordsStore, globalStore } = useStore();
   const { getWord, getOtherWords, currentWord, isNative, level, setIsNative } =
     wordsStore;
+  const { auth } = globalStore;
 
   return (
     <ContentWrapper>
-      <LevelNumber level={level} />
-      <LevelBar />
-      <MindWord
-        word={isNative ? currentWord.word.f_lang : currentWord.word.n_lang}
-        onClick={setIsNative}
-      />
-      <CardHolder />
+      {auth ? (
+        <>
+          <LevelNumber level={level} />
+          <MindWord
+            word={isNative ? currentWord.word.f_lang : currentWord.word.n_lang}
+            onClick={setIsNative}
+          />
+          <CardHolder />
+        </>
+      ) : (
+        <Auth />
+      )}
     </ContentWrapper>
   );
 };

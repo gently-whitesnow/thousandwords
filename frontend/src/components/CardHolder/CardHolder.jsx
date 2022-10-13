@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { CardHolderWrapper, Line } from "./CardHolder.styles";
-import Card from "../common/Card";
 import { useStore } from "../../store";
 import { shuffle } from "../../store/wordsStore";
+import Card from "../Card";
 
 const CardHolder = () => {
   const { wordsStore } = useStore();
