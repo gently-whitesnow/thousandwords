@@ -17,7 +17,7 @@ export const AnimationWrapper = styled.div`
   }
   @keyframes color-success {
     0% {
-      background-color: #ffdf69;
+      background-color: #ffd61f;
     }
     40% {
       background-color: #bbffa5;
@@ -25,12 +25,12 @@ export const AnimationWrapper = styled.div`
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     }
     100% {
-      background-color: #ffdf69;
+      background-color: #ffd61f;
     }
   }
   @keyframes color-notsuccess {
     0% {
-      background-color: #ffdf69;
+      background-color: #ffd61f;
     }
     40% {
       background-color: #ff6969;
@@ -38,7 +38,7 @@ export const AnimationWrapper = styled.div`
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     }
     100% {
-      background-color: #ffdf69;
+      background-color: #ffd61f;
     }
   }
 `;
@@ -52,13 +52,13 @@ export const CardWrapper = styled.div`
   max-width: 400px;
   width: 100%;
 
-  background-color: #ffe48f; //#fec85a;
+  background-color: #ffdb44; 
   border: none;
 
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
   :hover {
-    background-color: #ffdf69; //#fec85a;
+    background-color: #ffd61f; 
     transform: scale(1.05);
     box-shadow: #fff18b 0px 25px 20px -20px;
   }
