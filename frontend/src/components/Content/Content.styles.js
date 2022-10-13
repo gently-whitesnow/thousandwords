@@ -8,4 +8,8 @@ export const ContentWrapper = styled.div`
   width: 100%;
   margin-top: 50px;
   max-height: 1024px;
+
+  @media (max-width: 768px) {
+    margin-top: 10px;
+  }
 `;

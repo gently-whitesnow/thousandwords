@@ -1,9 +1,14 @@
 import styled from "styled-components";
 
 export const AnimationWrapper = styled.div`
-  height: 100%;
-  width: 100%;
+  /* height: 100%; */
   margin: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  @media (max-width: 768px) {
+    margin: 0px;
+  }
   .success {
     animation: color-success 1s;
   }
@@ -16,8 +21,7 @@ export const AnimationWrapper = styled.div`
     }
     40% {
       background-color: #bbffa5;
-      box-shadow: #bbffa5 0px
-          1px 2px 0px,
+      box-shadow: #bbffa5 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     }
     100% {
@@ -30,8 +34,7 @@ export const AnimationWrapper = styled.div`
     }
     40% {
       background-color: #ff6969;
-      box-shadow: #ff6969 0px
-          1px 2px 0px,
+      box-shadow: #ff6969 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     }
     100% {
@@ -40,12 +43,13 @@ export const AnimationWrapper = styled.div`
   }
 `;
 
-export const CardWrapper = styled.button`
+export const CardWrapper = styled.div`
+  -webkit-tap-highlight-color: transparent;
   cursor: pointer;
   max-height: 256px;
-  min-height: 128px;
-  max-width: 512px;
+  min-height: 70px;
   height: 100%;
+  max-width: 400px;
   width: 100%;
 
   background-color: #ffe48f; //#fec85a;
@@ -63,11 +67,13 @@ export const CardWrapper = styled.button`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 768px) {
-    margin: 15px;
-    font-size: 20px;
-  }
   color: white;
   font-size: 40px;
   text-align: center;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+  @media (max-width: 1024px) {
+    font-size: 30px;
+  }
 `;

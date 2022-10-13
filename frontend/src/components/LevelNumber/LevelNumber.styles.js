@@ -8,6 +8,7 @@ export const LevelNumberWrapper = styled.div`
 `;
 
 export const CustomNumber = styled.div`
+  text-align: center;
   font-size: 50px;
   color: #db98ff;
   text-shadow: 0px 0px 9px rgba(150, 150, 150, 0.3);
