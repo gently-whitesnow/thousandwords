@@ -47,7 +47,7 @@ export const CardWrapper = styled.div`
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
   max-height: 256px;
-  min-height: 70px;
+  min-height: 80px;
   height: 100%;
   max-width: 400px;
   width: 100%;
