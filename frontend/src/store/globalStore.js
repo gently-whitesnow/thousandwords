@@ -10,7 +10,7 @@ class GlobalStore {
       enforceActions: "never",
     });
   }
-  auth = false;
+  auth = true;
   email = null;
   validEmail = false;
 

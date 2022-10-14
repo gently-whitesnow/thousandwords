@@ -22,6 +22,7 @@ const Card = (props) => {
     // When the animation finishes, remove the class
     setTimeout(() => {
       button.classList.remove(classNameAnimation);
+      props.onClick(props.id);
     }, milliseconds);
   };
   return (
@@ -29,7 +30,7 @@ const Card = (props) => {
       <CardWrapper
         onClick={(e) => {
           handleRefreshClick(e);
-          props.onClick(props.id);
+          
         }}
       >
         {props.name}
