@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
-import { AnimationWrapper, CardWrapper } from "./Card.styles";
+import { AnimationWrapper, CardWrapper, TrueText } from "./Card.styles";
 
 const Card = (props) => {
   const handleRefreshClick = (event) => {
@@ -9,7 +9,7 @@ const Card = (props) => {
     else className = "notsuccess";
     // Animate the clicked button (event.target)
 
-    animateButton(event.target, className, 500);
+    animateButton(event.target, className, props.isSuccess ? 400 : 1000);
   };
 
   const animateButton = (button, classNameAnimation, milliseconds) => {
@@ -30,10 +30,10 @@ const Card = (props) => {
       <CardWrapper
         onClick={(e) => {
           handleRefreshClick(e);
-          
         }}
       >
         {props.name}
+        <TrueText className="trueText">{" " + props.trueName}</TrueText>
       </CardWrapper>
     </AnimationWrapper>
   );

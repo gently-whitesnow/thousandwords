@@ -14,6 +14,10 @@ export const AnimationWrapper = styled.div`
   }
   .notsuccess {
     animation: color-notsuccess 1s;
+    .trueText {
+      text-decoration-line: underline;
+      display: block;
+    }
   }
   @keyframes color-success {
     0% {
@@ -52,13 +56,13 @@ export const CardWrapper = styled.div`
   max-width: 400px;
   width: 100%;
 
-  background-color: #ffdb44; 
+  background-color: #ffdb44;
   border: none;
 
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
   :hover {
-    background-color: #ffd61f; 
+    background-color: #ffd61f;
     transform: scale(1.05);
     box-shadow: #fff18b 0px 25px 20px -20px;
   }
@@ -66,6 +70,7 @@ export const CardWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 
   color: white;
   font-size: 40px;
@@ -75,5 +80,16 @@ export const CardWrapper = styled.div`
   }
   @media (max-width: 1024px) {
     font-size: 30px;
+  }
+`;
+
+export const TrueText = styled.div`
+  display: none;
+  font-size: 40px;
+  @media (max-width: 1024px) {
+    font-size: 30px;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
   }
 `;
