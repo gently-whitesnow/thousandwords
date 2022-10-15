@@ -63,8 +63,11 @@ export const CardWrapper = styled.div`
   transition: all 0.2s ease-in-out;
   :hover {
     background-color: #ffd61f;
-    transform: scale(1.05);
+    
     box-shadow: #fff18b 0px 25px 20px -20px;
+    @media (min-width: 768px) {
+        transform: scale(1.05);
+    }
   }
 
   display: flex;
@@ -77,6 +80,7 @@ export const CardWrapper = styled.div`
   text-align: center;
   @media (max-width: 768px) {
     font-size: 20px;
+    margin-inline: 20px;
   }
   @media (max-width: 1024px) {
     font-size: 30px;
