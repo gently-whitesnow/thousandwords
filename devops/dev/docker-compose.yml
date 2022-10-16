@@ -1,0 +1,33 @@
+version: "3.7"  # версия docker-compose
+
+services: # Раздел, в котором будут описаны сервисы (клиент, сервер, база данных)
+  reverseproxy:  # Название сервиса
+    container_name: nginx # Название контейнера
+    image: nginx:1.21     # Используемый контейнер (в нашем случае официальный контейнер с docker-hub)
+    volumes:              # Тома - механизм связи данных в контейнере и на машине
+    # Сначала путь на сервере, потом путь в контейнере
+      - /var/log/nginx:/var/log/nginx # адрес сохранения логов nginx
+      - ~/thousandwords/devops/dev/nginx.conf:/etc/nginx/nginx.conf:ro # адрес нахождения конфигурации nginx (ro-readonly)
+      - ~/thousandwords/frontend/build/:/usr/share/nginx/html:ro # адрес нахождения статики фронта 
+      # - /etc/ssl/:/etc/nginx/ssl:ro # адрес нахождения сертификатов 
+    ports: 
+      - "80:80" # http порт
+      # - "443:443" # https порт
+    restart: always # настройка перезапуска контейнера
+    networks: # сети к которым будет подключен контейнер
+      - nginx_network
+    
+    # TODO
+  # backend-api:
+  #   container_name: backend-api
+  #   depends_on: # Позволяет дождаться инициализации nginx
+  #     - reverseproxy
+  #   image: backend-api:latest # берем контейнер с бэкендом с нашего docker hub
+  #   restart: always
+  #   # так как порты не открыты, достучать до контейнера можно будет только членам сети
+  #   networks: # подключаем к той же сети, чтобы nginx мог перенаправлять запросы контейнеру
+  #     - nginx_network
+        
+networks: # раздел определяющий сетевые подключения
+  nginx_network: # название сети
+    external: false # создать сеть, если ее нет (по умолчанию, можно не прописывать)
