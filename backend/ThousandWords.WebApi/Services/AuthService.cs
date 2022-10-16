@@ -33,7 +33,7 @@ public class AuthService
 
     private async Task<OperationResult<string>> GetOrCreateUserKeyAsync(string email, string dictionary)
     {
-        var userKey = User.GetKey(email, dictionary);
+        var userKey = User.GetKey(dictionary, email);
         var checkKeyOperation = await IsExistsUserKeyAsync(userKey);
         if (checkKeyOperation.Success)
         {

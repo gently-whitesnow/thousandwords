@@ -8,7 +8,7 @@ using ThousandWords.WebApi.Services;
 namespace ThousandWords.WebApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("auth")]
 [Produces("application/json")]
 public class AuthController : ControllerBase
 {
