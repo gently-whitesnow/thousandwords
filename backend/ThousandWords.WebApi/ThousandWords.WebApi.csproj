@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ThousandWords.Core\ThousandWords.Core.csproj" />
+      <ProjectReference Include="..\ThousandWords.FileAccess\ThousandWords.FileAccess.csproj" />
+      <ProjectReference Include="..\ThousandWords.RedisAccess\ThousandWords.RedisAccess.csproj" />
+    </ItemGroup>
+
+</Project>
