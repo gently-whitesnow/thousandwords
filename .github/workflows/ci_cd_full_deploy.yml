@@ -64,18 +64,15 @@ jobs:
 
     - name: Install dependencies
       run: |
-        ls
-        echo "ls"
         cd frontend
         npm install
         npm run build
-        ls
 
     - name: Run a multi-line script
       run: |
         ls
         cd ..
-        cp -r ~/frontend/build ~/
+        cp -r ./frontend/build ./
         ls
 
         
