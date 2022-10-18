@@ -7,8 +7,8 @@ services: # Раздел, в котором будут описаны серви
     volumes:              # Тома - механизм связи данных в контейнере и на машине
     # Сначала путь на сервере, потом путь в контейнере
       - /var/log/nginx:/var/log/nginx # адрес сохранения логов nginx
-      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # адрес нахождения конфигурации nginx (ro-readonly)
-      - /usr/share/nginx/html/:/usr/share/nginx/html:ro # адрес нахождения статики фронта 
+      - ~/thousandwords/devops/dev/nginx.conf:/etc/nginx/nginx.conf:ro # адрес нахождения конфигурации nginx (ro-readonly)
+      - ~/thousandwords/frontend/build/:/usr/share/nginx/html:ro # адрес нахождения статики фронта 
       - /etc/ssl/:/etc/nginx/ssl:ro # адрес нахождения сертификатов 
     ports: 
       - "80:80" # http порт
@@ -17,16 +17,30 @@ services: # Раздел, в котором будут описаны серви
     networks: # сети к которым будет подключен контейнер
       - nginx_network
     
+  redis_words:
+    container_name: redis_words
+    image: redis:6.2.6
+    restart: always
+    depends_on: # Позволяет дождаться инициализации nginx
+      - reverseproxy
+    networks:
+      - nginx_network
+    volumes:
+      - redis-data:/data
+
   backend-api:
     container_name: backend-api
     depends_on: # Позволяет дождаться инициализации nginx
-      - reverseproxy
-    image: localhost:5000/backend-api:latest # берем контейнер с бэкендом с нашего docker hub
+      - redis_words
+    image: backend-api:latest # берем контейнер с бэкендом с нашего docker hub
     restart: always
     # так как порты не открыты, достучать до контейнера можно будет только членам сети
     networks: # подключаем к той же сети, чтобы nginx мог перенаправлять запросы контейнеру
       - nginx_network
+
+volumes:
+  redis-data:
         
 networks: # раздел определяющий сетевые подключения
   nginx_network: # название сети
-    external: false # создать сеть, если ее нет (поумолчанию, можно не прописывать)
+    external: false # создать сеть, если ее нет (по умолчанию, можно не прописывать)

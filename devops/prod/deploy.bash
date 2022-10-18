@@ -8,7 +8,7 @@ sudo mkdir -p /etc/nginx
 sudo mv -rf ~/nginx.conf /etc/nginx
 
 # Запускаем сервис
-docker-compose up -d
-
+docker-compose up --force-recreate --build -d
+docker image prune -f
 
 # c ci-cd статика, compose file , nginx.conf
