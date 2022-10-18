@@ -65,7 +65,7 @@ jobs:
       with:
         node-version: 18
         registry-url: https://npm.pkg.github.com/
-    - run: npm i --no-save --legacy-peer-deps
+    - run: npm ci
     - run: npm run build
 
     - name: Run a multi-line script
