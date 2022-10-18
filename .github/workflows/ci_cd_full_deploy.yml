@@ -60,12 +60,11 @@ jobs:
         ls
       
 
-    - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
         node-version: 18
         registry-url: https://npm.pkg.github.com/
-    - run: npm i --package-lock
+    - run: npm i
     - run: npm run build
 
     - name: Run a multi-line script
