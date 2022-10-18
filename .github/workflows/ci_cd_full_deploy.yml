@@ -1,0 +1,29 @@
+#-----------------------------------------------------------------------------------------
+#
+# Сборка и деплой проекта thousandwords
+# 
+#-----------------------------------------------------------------------------------------
+
+name: deploy thousandwords
+
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+
+  build_and_deploy:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@master
+      - name: Login
+        run: docker login gently4005/thousandwords -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PWD }}
+      - name: build backend
+        run: |
+          docker build -t backend-api . -f backend/
+      - name: TAG
+        run: docker tag backend-api gently4005/thousandwords
+      - name: Push docker image
+        run: docker push gently4005/thousandwords
