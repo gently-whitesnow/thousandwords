@@ -19,7 +19,7 @@ const CardHolder = () => {
 
   useEffect(() => {
     getWordsHandler();
-  }, []);
+  }, [getWordsHandler]);
 
   const clickHandler = (word_id) => {
     if (word_id === currentWord?.word.word_id) {

@@ -15,7 +15,7 @@ const Content = () => {
 
   useEffect(() => {
     authHandler();
-  }, []);
+  }, [authHandler]);
 
   return (
     <ContentWrapper>

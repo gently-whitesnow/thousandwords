@@ -7,7 +7,7 @@ const WinContent = (props) => {
     <WinContentWrapper onClick={props.onClick}>
       <div>Поздравляю, ты выучил 1000 слов!</div>
       <div>Cказать спасибо можно тут:</div>
-      <a href="https://t.me/gently_whitesnow" target="_blank" >Telegram</a>
+      <a href="https://t.me/gently_whitesnow" target="_blank" rel="noreferrer" >Telegram</a>
     </WinContentWrapper>
   );
 };

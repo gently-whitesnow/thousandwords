@@ -1,6 +1,6 @@
 import { makeAutoObservable, configure } from "mobx";
 import api from "../api";
-import mockWords from "../mocks/words.json";
+
 
 class GlobalStore {
   constructor(rootStore) {
