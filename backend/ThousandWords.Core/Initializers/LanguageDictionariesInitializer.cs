@@ -43,7 +43,7 @@ public class LanguageDictionariesInitializer : IInitializer
                     PairsCount = languageDictionary.Pairs.Count()
                 };
                 await _dictionaryInfoDbContext.InsertAsync(dictionaryInfo);
-                await _languagePairsDbContext.InsertManyAsync(languageDictionary.Pairs);
+                var a =await _languagePairsDbContext.InsertManyAsync(languageDictionary.Pairs);
             }
 
             _initialized = true;

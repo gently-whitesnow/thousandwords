@@ -7,14 +7,14 @@ namespace ThousandWords.RedisAccess;
 
 public class LanguagePairsDbContext : ILanguagePairsDbContext
 {
-    private const string RedisCacheName = "LanguageDictionaries";
-    private const string MetricEntity = "";
+    
+    private const string MetricEntity = "redis";
     
     private readonly RedisCache _redisCache;
 
     public LanguagePairsDbContext(RedisProvider redisProvider)
     {
-        _redisCache = redisProvider.GetCache(RedisCacheName) ?? throw new ArgumentNullException(RedisCacheName);
+        _redisCache = redisProvider.GetCache(CacheNames.LanguageDictionaries.ToString());
     }
 
     public Task<OperationResult<List<LanguagePair>>> GetManyAsync(List<string> keys)

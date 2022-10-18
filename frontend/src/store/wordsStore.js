@@ -1,6 +1,5 @@
 import { makeAutoObservable, configure } from "mobx";
 import api from "../api";
-import mockWords from "../mocks/words.json";
 
 class WordsStore {
   constructor(rootStore) {
@@ -9,61 +8,67 @@ class WordsStore {
     configure({
       enforceActions: "never",
     });
-    this.init();
   }
-
-  init = () => {
-    this.getWordsHandler(10);
-  };
 
   currentWord = null;
   tempOtherWords = null;
   wordsQueue = [];
-  otherWords = [];
   level = 0;
   isNative = true;
 
   setIsNative = () => {
     this.isNative = !this.isNative;
     this.setWord(this.currentWord);
-    this.getWord();
-    this.getOtherWords();
+    this.getWords();
   };
 
-  getWord = () => {
-    this.currentWord = this.wordsQueue.pop();
-  };
-  getOtherWords = () => {
-    shuffle(this.otherWords);
-    this.tempOtherWords = this.otherWords.slice(3);
-  };
-  setWord = (word) => {
+  getWords = () => {
     shuffle(this.wordsQueue);
-    this.wordsQueue.unshift(word);
+    this.currentWord = this.wordsQueue.pop();
+    this.tempOtherWords = this.wordsQueue.slice(0, 3);
   };
 
-  getWordsHandler = (count) => {
+  setWord = (wordentity) => {
+    if (wordentity.count === 3) {
+      this.postWordshandler(
+        wordentity.word.word_id,
+        this.wordsQueue.map((e) => e.word.word_id)
+      );
+    } 
+    else {
+      this.wordsQueue.unshift(wordentity);
+    }
+  };
+
+  queueLength = 10;
+  getWordsHandler = () => {
     api
-      .getWords(count)
+      .getWords(this.queueLength)
       .then(({ data }) => {
-        this.wordsQueue = data.words;
-        this.otherWords = data.other_words;
-        this.level = data.level;
-        if (this.currentWord === null || this.tempOtherWords === null) {
-          this.getWord();
-          this.getOtherWords();
-        }
-      })
-      .catch((err) => {
-        this.wordsQueue = mockWords.words?.map((e) => {
+        this.wordsQueue = data.words?.map((e) => {
           return { word: e, count: 0 };
         });
-        this.otherWords = mockWords.other_words;
-        this.level = mockWords.user_level;
+        this.level = data.user_level;
         if (this.currentWord === null || this.tempOtherWords === null) {
-          this.getWord();
-          this.getOtherWords();
+          this.getWords();
         }
+        console.log(this.wordsQueue);
+        console.log(this.level);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  postWordshandler = (wordId, queueWords) => {
+    api
+      .postWords(wordId, 1, queueWords)
+      .then(({ data }) => {
+        if (data.words.length === 1) {
+          this.setWord({ word: data.words[0], count: 0 });
+        }
+        this.level = data.user_level;
+      })
+      .catch((err) => {
         console.error(err);
       });
   };

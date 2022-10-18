@@ -7,14 +7,13 @@ namespace ThousandWords.RedisAccess;
 
 public class UsersDbContext : IUsersDbContext
 {
-    private const string RedisCacheName = "Users";
-    private const string MetricEntity = "";
+    private const string MetricEntity = "redis";
     
     private readonly RedisCache _redisCache;
 
     public UsersDbContext(RedisProvider redisProvider)
     {
-        _redisCache = redisProvider.GetCache(RedisCacheName) ?? throw new ArgumentNullException(RedisCacheName);
+        _redisCache = redisProvider.GetCache(CacheNames.Users.ToString());
     }
 
     public Task<OperationResult<User>> GetUserByKeyAsync(string key)

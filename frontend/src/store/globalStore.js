@@ -10,7 +10,7 @@ class GlobalStore {
       enforceActions: "never",
     });
   }
-  auth = true;
+  auth = false;
   email = null;
   validEmail = false;
 
@@ -22,6 +22,29 @@ class GlobalStore {
   };
   setValidEmail = (result) => {
     this.validEmail = result;
+  };
+
+  sendEmailhandler = (email) => {
+    api
+      .postEmail(email)
+      .then(() => {
+        this.setAuth(true);
+      })
+      .catch((err) => {
+        this.setAuth(false);
+        console.error(err);
+      });
+  };
+  authHandler = () => {
+    api
+      .getAuth()
+      .then(() => {
+        this.setAuth(true);
+      })
+      .catch((err) => {
+        this.setAuth(false);
+        console.error(err);
+      });
   };
 }
 

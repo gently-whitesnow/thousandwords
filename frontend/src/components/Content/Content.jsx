@@ -2,17 +2,20 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { ContentWrapper } from "./Content.styles";
 import CardHolder from "../CardHolder";
-import LevelBar from "../LevelBar";
 import LevelNumber from "../LevelNumber";
 import { useStore } from "../../store";
 import MindWord from "../MindWord";
 import Auth from "../Auth";
+import WinContent from "../WinContent";
 
 const Content = () => {
   const { wordsStore, globalStore } = useStore();
-  const { getWord, getOtherWords, currentWord, isNative, level, setIsNative } =
-    wordsStore;
-  const { auth } = globalStore;
+  const { currentWord, isNative, level, setIsNative } = wordsStore;
+  const { auth, authHandler } = globalStore;
+
+  useEffect(() => {
+    authHandler();
+  }, []);
 
   return (
     <ContentWrapper>
@@ -20,13 +23,17 @@ const Content = () => {
         <>
           <LevelNumber level={level} />
           <MindWord
-            word={isNative ? currentWord.word.f_lang : currentWord.word.n_lang}
+            word={
+              isNative ? currentWord?.word.f_lang : currentWord?.word.n_lang
+            }
             onClick={setIsNative}
           />
           <CardHolder />
         </>
-      ) : (
+      ) : level !== 1000 ? (
         <Auth />
+      ) : (
+        <WinContent />
       )}
     </ContentWrapper>
   );

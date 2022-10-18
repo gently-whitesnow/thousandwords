@@ -17,16 +17,30 @@ services: # Раздел, в котором будут описаны серви
     networks: # сети к которым будет подключен контейнер
       - nginx_network
     
-    # TODO
-  # backend-api:
-  #   container_name: backend-api
-  #   depends_on: # Позволяет дождаться инициализации nginx
-  #     - reverseproxy
-  #   image: backend-api:latest # берем контейнер с бэкендом с нашего docker hub
-  #   restart: always
-  #   # так как порты не открыты, достучать до контейнера можно будет только членам сети
-  #   networks: # подключаем к той же сети, чтобы nginx мог перенаправлять запросы контейнеру
-  #     - nginx_network
+  redis_words:
+    container_name: redis_words
+    image: redis:6.2.6
+    restart: always
+    depends_on: # Позволяет дождаться инициализации nginx
+      - reverseproxy
+    networks:
+      - nginx_network
+    volumes: 
+      - cache:/data
+
+  backend-api:
+    container_name: backend-api
+    depends_on: # Позволяет дождаться инициализации nginx
+      - redis_words
+    image: backend-api:latest # берем контейнер с бэкендом с нашего docker hub
+    restart: always
+    # так как порты не открыты, достучать до контейнера можно будет только членам сети
+    networks: # подключаем к той же сети, чтобы nginx мог перенаправлять запросы контейнеру
+      - nginx_network
+
+volumes:
+  cache:
+    driver: local
         
 networks: # раздел определяющий сетевые подключения
   nginx_network: # название сети

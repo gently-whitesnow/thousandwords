@@ -1,6 +1,7 @@
 namespace ThousandWords.RedisAccess;
 
-public class CacheNames
+public enum CacheNames
 {
-    
+    LanguageDictionaries,
+    Users
 }

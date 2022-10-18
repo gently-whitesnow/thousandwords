@@ -6,7 +6,9 @@ import { useStore } from "../../store";
 const Auth = () => {
   const { globalStore } = useStore();
 
-  const { email, setEmail, setValidEmail, validEmail, setAuth } = globalStore;
+  const { email, setEmail, setValidEmail, validEmail, sendEmailhandler } =
+    globalStore;
+  
   const onChange = (e) => {
     let mail = e.target.value.trim();
 
@@ -24,9 +26,7 @@ const Auth = () => {
   };
   return (
     <AuthWrapper>
-      <Text>
-        Введите почту, мы запомним слова
-      </Text>
+      <Text>Введите почту, мы запомним слова</Text>
       <Input
         placeholder="email@domain.ru"
         onChange={onChange}
@@ -34,7 +34,13 @@ const Auth = () => {
         valid={validEmail}
       />
       {validEmail ? (
-        <NextButton onClick={() => setAuth(true)}>✔</NextButton>
+        <NextButton
+          onClick={() => {
+            sendEmailhandler(email);
+          }}
+        >
+          ✔
+        </NextButton>
       ) : null}
     </AuthWrapper>
   );

@@ -1,4 +1,5 @@
 ﻿using ATI.Services.Common.Behaviors.OperationBuilder.Extensions;
+using ATI.Services.Common.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using ThousandWords.Core.Models.DTO;
 using ThousandWords.Core.Services.CompleteWord;
@@ -9,8 +10,7 @@ namespace ThousandWords.WebApi.Controllers;
 
 [ApiController]
 [Route("words")]
-[Produces("application/json")]
-public class WordsController : ControllerBase
+public class WordsController : ControllerWithOpenApi
 {
     private readonly GetWordsService _getWordsService;
     private readonly CompleteWordService _completeWordService;

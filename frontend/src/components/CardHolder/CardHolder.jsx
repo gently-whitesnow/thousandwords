@@ -8,72 +8,96 @@ import Card from "../Card";
 const CardHolder = () => {
   const { wordsStore } = useStore();
   const {
-    getWord,
+    getWords,
     setWord,
-    getOtherWords,
     isNative,
     currentWord,
     tempOtherWords,
     wordsQueue,
+    getWordsHandler,
   } = wordsStore;
 
+  useEffect(() => {
+    getWordsHandler();
+  }, []);
+
   const clickHandler = (word_id) => {
-    if (word_id === currentWord.word.word_id) {
+    if (word_id === currentWord?.word.word_id) {
       currentWord.count++;
       setWord(currentWord);
     } else {
       currentWord.count = 0;
       setWord(currentWord);
     }
-    getWord();
-    getOtherWords();
+    getWords();
     console.log(wordsQueue);
-    wordsQueue.map((e) => console.log(e.count));
+    wordsQueue.map((e) => console.log(e.word.n_lang));
   };
 
-  console.log(currentWord);
-  console.log(tempOtherWords);
-  let cards = [
-    <Card
-      name={isNative ? currentWord.word.n_lang : currentWord.word.f_lang}
-      onClick={clickHandler}
-      id={currentWord.word.word_id}
-      isSuccess={true}
-      trueName={isNative ? currentWord.word.n_lang : currentWord.word.f_lang}
-    />,
-    <Card
-      name={isNative ? tempOtherWords[0].n_lang : tempOtherWords[0].f_lang}
-      onClick={clickHandler}
-      id={tempOtherWords[0].word_id}
-      isSuccess={false}
-      trueName={isNative ? currentWord.word.n_lang : currentWord.word.f_lang}
-    />,
-    <Card
-      name={isNative ? tempOtherWords[1].n_lang : tempOtherWords[1].f_lang}
-      onClick={clickHandler}
-      id={tempOtherWords[1].word_id}
-      isSuccess={false}
-      trueName={isNative ? currentWord.word.n_lang : currentWord.word.f_lang}
-    />,
-    <Card
-      name={isNative ? tempOtherWords[2].n_lang : tempOtherWords[2].f_lang}
-      onClick={clickHandler}
-      id={tempOtherWords[2].word_id}
-      isSuccess={false}
-      trueName={isNative ? currentWord.word.n_lang : currentWord.word.f_lang}
-    />,
-  ];
+  let cards = [];
+  if (tempOtherWords?.length === 3) {
+    cards = [
+      <Card
+        name={isNative ? currentWord?.word.n_lang : currentWord?.word.f_lang}
+        onClick={clickHandler}
+        id={currentWord?.word.word_id}
+        isSuccess={true}
+        trueName={
+          isNative ? currentWord?.word.n_lang : currentWord?.word.f_lang
+        }
+      />,
+      <Card
+        name={
+          isNative
+            ? tempOtherWords[0]?.word.n_lang
+            : tempOtherWords[0]?.word.f_lang
+        }
+        onClick={clickHandler}
+        id={tempOtherWords[0]?.word.word_id}
+        isSuccess={false}
+        trueName={
+          isNative ? currentWord?.word.n_lang : currentWord?.word.f_lang
+        }
+      />,
+      <Card
+        name={
+          isNative
+            ? tempOtherWords[1]?.word.n_lang
+            : tempOtherWords[1]?.word.f_lang
+        }
+        onClick={clickHandler}
+        id={tempOtherWords[1]?.word.word_id}
+        isSuccess={false}
+        trueName={
+          isNative ? currentWord?.word.n_lang : currentWord?.word.f_lang
+        }
+      />,
+      <Card
+        name={
+          isNative
+            ? tempOtherWords[2]?.word.n_lang
+            : tempOtherWords[2]?.word.f_lang
+        }
+        onClick={clickHandler}
+        id={tempOtherWords[2]?.word.word_id}
+        isSuccess={false}
+        trueName={
+          isNative ? currentWord?.word.n_lang : currentWord?.word.f_lang
+        }
+      />,
+    ];
+    shuffle(cards);
+  }
 
-  shuffle(cards);
   return (
     <CardHolderWrapper>
       <Line>
-        {cards[0]}
-        {cards[1]}
+        {cards[0] ?? null}
+        {cards[1] ?? null}
       </Line>
       <Line>
-        {cards[2]}
-        {cards[3]}
+        {cards[2] ?? null}
+        {cards[3] ?? null}
       </Line>
     </CardHolderWrapper>
   );

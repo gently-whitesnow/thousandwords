@@ -1,4 +1,5 @@
 ﻿using ATI.Services.Common.Behaviors.OperationBuilder.Extensions;
+using ATI.Services.Common.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using ThousandWords.Core.Interfaces.DbContexts;
 using ThousandWords.Core.Models.DTO;
@@ -10,7 +11,7 @@ namespace ThousandWords.WebApi.Controllers;
 [ApiController]
 [Route("auth")]
 [Produces("application/json")]
-public class AuthController : ControllerBase
+public class AuthController : ControllerWithOpenApi
 {
     private readonly IUsersDbContext _usersDbContext;
     private readonly AuthService _authService;

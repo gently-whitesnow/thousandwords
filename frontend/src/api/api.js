@@ -17,6 +17,19 @@ export class Api {
   };
 
   getWords = (count) => this.clientWrapper("get", `api/words?count=${count}`);
+  getAuth = () => this.clientWrapper("get", `api/auth`);
+
+  postEmail = (email) =>
+    this.clientWrapper("post", `api/auth`, {
+      email: email,
+      dictionary: "ru_en",
+    });
+  postWords = (wordId, count, queueWords) =>
+    this.clientWrapper("post", `api/words`, {
+      word_id: wordId,
+      count: count,
+      queue_words: queueWords,
+    });
 }
 const api = new Api();
 

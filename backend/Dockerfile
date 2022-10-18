@@ -1,20 +1,22 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /src
-COPY ["ThousandWords.WebApi/ThousandWords.WebApi.csproj", "ThousandWords.WebApi/"]
-RUN dotnet restore "ThousandWords.WebApi/ThousandWords.WebApi.csproj"
-COPY . .
-WORKDIR "/src/ThousandWords.WebApi"
-RUN dotnet build "ThousandWords.WebApi.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "ThousandWords.WebApi.csproj" -c Release -o /app/publish
+COPY ./*.sln ./*/*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p ./${file%.*}/ && mv $file ./${file%.*}/; done
 
-FROM base AS final
+RUN dotnet restore
+COPY ./ ./
+RUN dotnet publish ./ThousandWords.WebApi/ -o /publish -c Release --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ThousandWords.WebApi.dll"]
+COPY --from=build-env /publish .
+
+# change timezone from ETC to local
+RUN apt update && apt install tzdata -y
+ENV TZ="Europe/Moscow"
+
+# folder with csv
+COPY ./ThousandWords.WebApi/languages/*.csv ./languages/
+
+ENTRYPOINT ["dotnet","ThousandWords.WebApi.dll"]
