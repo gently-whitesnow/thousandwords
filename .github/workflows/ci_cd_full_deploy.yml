@@ -23,8 +23,6 @@ jobs:
       - name: build backend
         run: |
           cd backend
-          docker build -t backend-api .
-      - name: TAG
-        run: docker tag backend-api gently4005/thousandwords
-      - name: Push docker image
-        run: docker push gently4005/thousandwords
+          docker build -t gently4005/thousandwords:latest .
+      - name: push docker image
+        run: docker push gently4005/thousandwords:latest

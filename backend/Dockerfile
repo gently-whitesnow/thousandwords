@@ -13,7 +13,7 @@ WORKDIR /app
 COPY --from=build-env /publish .
 
 # change timezone from ETC to local
-RUN apt update && apt install tzdata -y
+RUN apt update && apt-get install -y --no-install-recommends apt-utils && apt install tzdata -y
 ENV TZ="Europe/Moscow"
 
 # folder with csv
