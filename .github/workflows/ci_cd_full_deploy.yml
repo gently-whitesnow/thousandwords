@@ -68,7 +68,7 @@ jobs:
         echo "ls"
         cd frontend
         npm install
-        npm build
+        npm run build
 
     - name: Run a multi-line script
       run: |
