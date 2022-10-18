@@ -70,16 +70,7 @@ jobs:
     - name: Run a multi-line script
       run: |
         ls
-        cp -r ./build ../
-
-    
-    - name: Run a multi-line script
-      run: |
-        ls
-        cd ..
-        ls
-
-
+        cp -r ./frontend/build ./
         
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
