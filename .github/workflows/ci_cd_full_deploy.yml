@@ -43,9 +43,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
 
-    strategy: # Это стратегия запусков
-      matrix: # Запускать это задание с разными параметрами
-        node-version: [18.x] # Версии ноды
+    # strategy: # Это стратегия запусков
+    #   matrix: # Запускать это задание с разными параметрами
+    #     node-version: [18.x] # Версии ноды
 
     steps:
     - name: checkout
@@ -60,7 +60,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with: 
-        node-version: "18.x"
+        node-version: "14.x"
 
     - name: Install dependencies
       run: |
