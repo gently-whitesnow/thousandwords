@@ -69,12 +69,13 @@ jobs:
         cd frontend
         npm install
         npm run build
+        ls
 
     - name: Run a multi-line script
       run: |
         ls
         cd ..
-        cp -aT ./frontend/build ./
+        cp -aT /frontend/build /
         ls
 
         
