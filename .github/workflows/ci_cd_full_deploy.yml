@@ -70,8 +70,6 @@ jobs:
     - name: Run a multi-line script
       run: |
         ls
-        cd ..
-        ls
         cp -R ./frontend/build ./
         ls
         
