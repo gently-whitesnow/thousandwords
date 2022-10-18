@@ -5,7 +5,7 @@ sudo mv -rf ~/build/* /usr/share/nginx/html
 # Перекладываем конфигурационный файл
 sudo rm -rf /etc/nginx/*
 sudo mkdir -p /etc/nginx
-sudo mv -rf ~/nginx.conf /etc/nginx
+sudo mv -rf ~/prod/nginx.conf /etc/nginx
 
 # Запускаем сервис
 docker-compose up --force-recreate --build -d
