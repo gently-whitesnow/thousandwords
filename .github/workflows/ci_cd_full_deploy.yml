@@ -22,7 +22,7 @@ jobs:
         run: docker login registry-1.docker.io/v2 -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PWD }}
       - name: build backend
         run: |
-          docker build -t backend-api . -f backend/
+          docker build -t backend-api . -f backend/Dockerfile
       - name: TAG
         run: docker tag backend-api gently4005/thousandwords
       - name: Push docker image
