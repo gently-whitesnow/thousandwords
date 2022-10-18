@@ -65,14 +65,8 @@ jobs:
       with:
         node-version: 18
         registry-url: https://npm.pkg.github.com/
-      run: |
-            if [ -e yarn.lock ]; then
-            yarn install --frozen-lockfile
-            elif [ -e package-lock.json ]; then
-            npm ci
-            else
-            npm i
-            fi
+    - run: npm i --no-save --legacy-peer-deps
+    - run: npm run build
 
     - name: Run a multi-line script
       run: |
