@@ -31,10 +31,11 @@ jobs:
         uses: docker/setup-buildx-action@v2
       -
         name: Build and push
+        run: cd backend
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./backend/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_LOGIN }}/thousandwords:latest
   
