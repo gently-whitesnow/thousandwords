@@ -74,7 +74,7 @@ jobs:
       run: |
         ls
         cd ..
-        cp -R ./frontend/build/ ./
+        cp -R frontend/build/ /
         ls
 
         
