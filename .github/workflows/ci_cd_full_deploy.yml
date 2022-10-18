@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Login
-        run: docker login gently4005/thousandwords -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PWD }}
+        run: docker login registry-1.docker.io/v2 -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PWD }}
       - name: build backend
         run: |
           docker build -t backend-api . -f backend/
