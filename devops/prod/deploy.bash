@@ -1,11 +1,11 @@
 # Перекладываем статику
-sudo rm -rf /usr/share/nginx/html/*
-sudo mkdir -p /usr/share/nginx/html
-sudo cp -rf ~/build/* /usr/share/nginx/html
+rm -rf /usr/share/nginx/html/*
+mkdir -p /usr/share/nginx/html
+cp -rf ~/build/* /usr/share/nginx/html
 # Перекладываем конфигурационный файл
-sudo rm -rf /etc/nginx/*
-sudo mkdir -p /etc/nginx
-sudo cp -rf ~/prod/nginx.conf /etc/nginx
+rm -rf /etc/nginx/*
+mkdir -p /etc/nginx
+cp -rf ~/prod/nginx.conf /etc/nginx
 
 # логинимся в докере
 docker login https://index.docker.io/v2 -u $DOCKER_LOGIN -p $DOCKER_PWD 
@@ -17,3 +17,4 @@ docker image prune -f
 
 
 # sudo find / -name "*sshd_config*"
+# sudo chown -R ci:cicd /etc/nginx/ 
