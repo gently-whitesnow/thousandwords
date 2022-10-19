@@ -46,22 +46,22 @@ jobs:
     - name: checkout
       uses: actions/checkout@master
 
-    - name: use node.js
-      uses: actions/setup-node@v2
-      with: 
-        node-version: "18.x"
+    # - name: use node.js
+    #   uses: actions/setup-node@v2
+    #   with: 
+    #     node-version: "18.x"
 
-    - name: install, build frontend
-      run: |
-        ls
-        cd frontend
-        npm install
-        npm run build
+    # - name: install, build frontend
+    #   run: |
+    #     ls
+    #     cd frontend
+    #     npm install
+    #     npm run build
 
     - name: copy static
       run: |
         ls
-        cp -r ./frontend/build ./
+        # cp -r ./frontend/build ./
         cp -r ./devops/prod ./
         
     - name: send static on server
@@ -70,6 +70,7 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         password: ${{ secrets.SERVER_PWD }}
-        source: "prod,build"
+        # source: "prod,build"
+        source: "prod"
         target: "~/"
         overwrite: true

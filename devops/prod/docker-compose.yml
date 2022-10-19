@@ -7,8 +7,8 @@ services: # Раздел, в котором будут описаны серви
     volumes:              # Тома - механизм связи данных в контейнере и на машине
     # Сначала путь на сервере, потом путь в контейнере
       - /var/log/nginx:/var/log/nginx # адрес сохранения логов nginx
-      - ~/thousandwords/devops/dev/nginx.conf:/etc/nginx/nginx.conf:ro # адрес нахождения конфигурации nginx (ro-readonly)
-      - ~/thousandwords/frontend/build/:/usr/share/nginx/html:ro # адрес нахождения статики фронта 
+      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # адрес нахождения конфигурации nginx (ro-readonly)
+      - /usr/share/nginx/html:/usr/share/nginx/html:ro # адрес нахождения статики фронта 
       - /etc/ssl/:/etc/nginx/ssl:ro # адрес нахождения сертификатов 
     ports: 
       - "80:80" # http порт
