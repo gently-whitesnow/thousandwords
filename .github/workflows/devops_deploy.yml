@@ -42,7 +42,7 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         password: ${{ secrets.SERVER_PWD }}
-        script: 'source ~/remote_profile && echo $DOCKER_LOGIN && echo $DOCKER_PWD'
+        script: 'source ~/remote_profile && cd prod && bash deploy.bash'
 
 
     
