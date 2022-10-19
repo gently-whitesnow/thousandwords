@@ -71,3 +71,11 @@ jobs:
         source: "prod,build"
         target: "~/"
         overwrite: true
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PWD }}
+        script: 'source ~/remote_profile && cd prod && bash deploy.bash'
