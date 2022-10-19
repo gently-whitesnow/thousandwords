@@ -9,7 +9,6 @@ sudo cp -rf ~/prod/nginx.conf /etc/nginx
 
 # логинимся в докере
 docker login https://index.docker.io/v2 -u $DOCKER_LOGIN -p $DOCKER_PWD 
-docker pull gently4005/thousandwords:latest
 
 # Запускаем сервис
 docker-compose up --force-recreate --build -d

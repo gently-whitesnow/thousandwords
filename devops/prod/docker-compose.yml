@@ -29,10 +29,10 @@ services: # Раздел, в котором будут описаны серви
       - redis-data:/data
 
   backend-api:
-    container_name: gently4005/thousandwords
+    container_name: backend-api
     depends_on: # Позволяет дождаться инициализации nginx
       - redis_words
-    image: backend-api:latest # берем контейнер с бэкендом с нашего docker hub
+    image: gently4005/thousandwords:latest # берем контейнер с бэкендом с нашего docker hub
     restart: always
     # так как порты не открыты, достучать до контейнера можно будет только членам сети
     networks: # подключаем к той же сети, чтобы nginx мог перенаправлять запросы контейнеру
