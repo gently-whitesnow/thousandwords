@@ -13,3 +13,6 @@ docker login https://index.docker.io/v2 -u $DOCKER_LOGIN -p $DOCKER_PWD
 # Запускаем сервис
 docker-compose up --force-recreate --build -d
 docker image prune -f
+
+
+# sudo find / -name "*sshd_config*"
