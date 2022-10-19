@@ -4,7 +4,7 @@
 # 
 #-----------------------------------------------------------------------------------------
 
-name: deploy thousandwords
+name: deploy front thousandwords
 
 on:
   push:

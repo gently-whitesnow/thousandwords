@@ -8,8 +8,6 @@ name: deploy thousandwords
 
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - "force"
 jobs:
