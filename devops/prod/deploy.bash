@@ -7,8 +7,9 @@ sudo rm -rf /etc/nginx/*
 sudo mkdir -p /etc/nginx
 sudo cp -rf ~/prod/nginx.conf /etc/nginx
 
+# логинимся в докере
+docker login -u $DOCKER_LOGIN -p $DOCKER_PWD
+
 # Запускаем сервис
 docker-compose up --force-recreate --build -d
 docker image prune -f
-
-# c ci-cd статика, compose file , nginx.conf
