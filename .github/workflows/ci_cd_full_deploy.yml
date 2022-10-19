@@ -40,39 +40,31 @@ jobs:
 
 
   build_and_deploy_static:
-    name: Build
     runs-on: ubuntu-latest
-
-    # strategy: # Это стратегия запусков
-    #   matrix: # Запускать это задание с разными параметрами
-    #     node-version: [18.x] # Версии ноды
 
     steps:
     - name: checkout
       uses: actions/checkout@master
 
-    - name: Run a multi-line script
-      run: |
-        cp -r ./devops/prod ./
-
-    - name: Use Node.js
+    - name: use node.js
       uses: actions/setup-node@v2
       with: 
         node-version: "18.x"
 
-    - name: Install dependencies
+    - name: install, build frontend
       run: |
         ls
         cd frontend
         npm install
         npm run build
 
-    - name: Run a multi-line script
+    - name: copy static
       run: |
         ls
         cp -r ./frontend/build ./
+        cp -r ./devops/prod ./
         
-    - name: copy file via ssh password
+    - name: send static on server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
