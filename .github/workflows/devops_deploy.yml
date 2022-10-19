@@ -45,6 +45,7 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         password: ${{ secrets.SERVER_PWD }}
+        envs: DOCKER_LOGIN,DOCKER_PWD
         script: ssh ci@109.196.164.182 "export DOCKER_LOGIN=$DOCKER_LOGIN && export DOCKER_PWD=$DOCKER_PWD && cd prod && bash deploy.bash"
 
 
