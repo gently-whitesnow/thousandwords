@@ -23,19 +23,18 @@ class WordsStore {
   };
 
   getWords = () => {
-    shuffle(this.wordsQueue);
     this.currentWord = this.wordsQueue.pop();
     this.tempOtherWords = this.wordsQueue.slice(0, 3);
   };
 
   setWord = (wordentity) => {
+    shuffle(this.wordsQueue);
     if (wordentity.count === 3) {
       this.postWordshandler(
         wordentity.word.word_id,
         this.wordsQueue.map((e) => e.word.word_id)
       );
-    } 
-    else {
+    } else {
       this.wordsQueue.unshift(wordentity);
     }
   };
