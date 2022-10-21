@@ -2,45 +2,43 @@ version: "3.7"  # версия docker-compose
 
 services: # Раздел, в котором будут описаны сервисы (клиент, сервер, база данных)
   reverseproxy:  # Название сервиса
-    container_name: nginx # Название контейнера
-    image: nginx:1.21     # Используемый контейнер (в нашем случае официальный контейнер с docker-hub)
+    container_name: nginx # Название контейнера 
+    image: nginx:1.21     # Используемый контейнер (в нашем случае официальный контейнер с Docker Hub)
     volumes:              # Тома - механизм связи данных в контейнере и на машине
     # Сначала путь на сервере, потом путь в контейнере
-      - /var/log/nginx:/var/log/nginx # адрес сохранения логов nginx
-      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # адрес нахождения конфигурации nginx (ro-readonly)
-      - /usr/share/nginx/html:/usr/share/nginx/html:ro # адрес нахождения статики фронта 
-      - /etc/ssl/:/etc/nginx/ssl:ro # адрес нахождения сертификатов 
+      - /var/log/nginx:/var/log/nginx # Адрес сохранения логов nginx
+      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Адрес нахождения конфигурации nginx (ro-readonly)
+      - /usr/share/nginx/html:/usr/share/nginx/html:ro # Адрес нахождения статики фронта 
+      - /etc/ssl/:/etc/nginx/ssl:ro # Адрес нахождения сертификатов 
     ports: 
-      - "80:80" # http порт
-      - "443:443" # https порт
-    restart: always # настройка перезапуска контейнера
-    networks: # сети к которым будет подключен контейнер
+      - "80:80" # Http порт
+      - "443:443" # Https порт
+    restart: always # Настройка перезапуска контейнера
+    networks: # Сеть докера, в которой будут находиться все сервисы
       - nginx_network
     
-  redis_words:
+  redis_words: # Раздел с нашей базой данных
     container_name: redis_words
-    image: redis:6.2.6
+    image: redis:6.2.6 # Используемый контейнер (в нашем случае официальный контейнер с Docker Hub)
     restart: always
-    depends_on: # Позволяет дождаться инициализации nginx
-      - reverseproxy
     networks:
       - nginx_network
     volumes:
-      - redis-data:/data
+      - redis-data:/data # Позволяет нам перезапускать Редис без потери данных
 
   backend-api:
     container_name: backend-api
-    depends_on: # Позволяет дождаться инициализации nginx
+    depends_on: # Позволяет дождаться инициализации базы данных
       - redis_words
-    image: gently4005/thousandwords:latest # берем контейнер с бэкендом с нашего docker hub
+    image: gently4005/thousandwords:latest # берем контейнер с бэкендом с нашего Docker Hub
     restart: always
     # так как порты не открыты, достучать до контейнера можно будет только членам сети
-    networks: # подключаем к той же сети, чтобы nginx мог перенаправлять запросы контейнеру
+    networks: # подключаем к аналогичной сети, чтобы nginx мог перенаправлять запросы контейнеру
       - nginx_network
 
-volumes:
+volumes: # Раздел, объявляющий статические тома
   redis-data:
         
-networks: # раздел определяющий сетевые подключения
-  nginx_network: # название сети
-    external: false # создать сеть, если ее нет (по умолчанию, можно не прописывать)
+networks: # Раздел определяющий сетевые подключения
+  nginx_network: # Название сети
+    external: false # Создать сеть, если ее нет (по умолчанию, можно не прописывать)

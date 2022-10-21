@@ -4,66 +4,74 @@
 # 
 #-----------------------------------------------------------------------------------------
 
-name: deploy thousandwords
+# Используемые секреты
+# DOCKER_LOGIN - логин от Docker Hub
+# DOCKER_ACCESS_TOKEN - токен доступа, который можно получить на сайте в настройках Docker Hub
+# SERVER_HOST - ip адрес сервера
+# SERVER_USER - имя юзера, настроенного под ci-cd
+# SERVER_PWD - пароль этого юзера
 
-on:
-  push:
+name: deploy thousandwords # Название action
+
+on: # Действие по которому будет вызван action
+  push: 
     tags:
       - "force"
-jobs:
+jobs: # Перечисление джоб которые должны отработать
 
-  build_and_deploy_backend:
+  build_and_deploy_backend: # Билд бэкенда и отправка его на собственный Docker Hub
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Машина на которой будем билдить
     
-    steps:
+    steps: # name - описание uses - действие
       -
-        name: Checkout 
-        uses: actions/checkout@master
+        name: Checkout  
+        uses: actions/checkout@master # Клонируем ветку master используя встроенные инструменты
       -
         name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v2 # Логинимся на Docker Hub, чтобы после билда сохранить там свой контейнер
         with:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       - 
-        name: Build
+        name: Build # Переходим в папочку и запускаем Dockerfile 
         run: |
           cd backend
           docker build -t backend-api .
       - 
-        name: TAG
+        name: TAG # Вешаем тег на контейнер
         run: docker tag backend-api ${{ secrets.DOCKER_LOGIN }}/thousandwords:latest
       - 
-        name: Push docker image
+        name: Push docker image # Отправляем наш контейнер 
         run: docker push ${{ secrets.DOCKER_LOGIN }}/thousandwords:latest
 
 
-  build_and_deploy_static:
+  build_and_deploy_static: # Билд статики и отправка конфигурационных файлов
+    
     runs-on: ubuntu-latest
 
     steps:
     - name: checkout
       uses: actions/checkout@master
 
-    - name: use node.js
-      uses: actions/setup-node@v2
+    - name: use node.js 
+      uses: actions/setup-node@v2 # Инструмент для билда фронта
       with: 
         node-version: "18.x"
 
-    - name: install, build frontend
+    - name: install, build frontend # Собственно обновление и билд зависимостей
       run: |
         cd frontend
         npm install
         npm run build
 
-    - name: copy static
+    - name: copy static # Статику и конфигурационные файлы копируем в директорию проекта
       run: |
         cp -r ./frontend/build ./
         cp -r ./devops/prod ./
         
     - name: send static on server
-      uses: appleboy/scp-action@master
+      uses: appleboy/scp-action@master # Инструмент, позволяющий по scp отправить файлы на нашу машину
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
@@ -73,7 +81,7 @@ jobs:
         overwrite: true
 
     - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@master # Инструмент, позволяющий запустить bash скрипт на нашей машине
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
