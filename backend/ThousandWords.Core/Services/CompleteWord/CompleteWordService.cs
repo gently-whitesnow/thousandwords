@@ -47,15 +47,6 @@ public class CompleteWordService
         {
             user.CompletedPairs.Add(word);
         }
-        var operation = await _usersDbContext.InsertAsync(user);
-        if (operation.Success)
-            return operation;
-        
-        foreach (var word in completedWordId)
-        {
-            user.CompletedPairs.Remove(word);
-        }
-
-        return operation;
+        return await _usersDbContext.InsertAsync(user);
     }
 }
