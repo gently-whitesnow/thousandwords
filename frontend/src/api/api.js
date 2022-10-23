@@ -4,6 +4,7 @@ export class Api {
   constructor() {
     this.client = axios.create();
     this.client.defaults.baseURL = "https://thousandwords.ru/";
+    // this.client.defaults.baseURL = "http://localhost:80/";
     this.client.defaults.headers["Access-Control-Allow-Origin"] = "*";
     this.client.defaults.headers["Content-Type"] =
       "application/json;charset=UTF-8";
@@ -24,9 +25,9 @@ export class Api {
       email: email,
       dictionary: "ru_en",
     });
-  postWords = (wordId, count, queueWords) =>
+  postWords = (wordIds, count, queueWords) =>
     this.clientWrapper("post", `api/words`, {
-      word_id: wordId,
+      word_ids: wordIds,
       count: count,
       queue_words: queueWords,
     });

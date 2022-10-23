@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { CardHolderWrapper, Line } from "./CardHolder.styles";
+import { CardHolderWrapper, InetAttention, Line } from "./CardHolder.styles";
 import { useStore } from "../../store";
 import { shuffle } from "../../store/wordsStore";
 import Card from "../Card";
+
 
 const CardHolder = () => {
   const { wordsStore } = useStore();
@@ -30,8 +31,6 @@ const CardHolder = () => {
       setWord(currentWord);
     }
     getWords();
-    console.log(wordsQueue);
-    wordsQueue.map((e) => console.log(e.word.n_lang));
   };
 
   let cards = [];
@@ -91,14 +90,20 @@ const CardHolder = () => {
 
   return (
     <CardHolderWrapper>
-      <Line>
-        {cards[0] ?? null}
-        {cards[1] ?? null}
-      </Line>
-      <Line>
-        {cards[2] ?? null}
-        {cards[3] ?? null}
-      </Line>
+      {wordsQueue.length <= 3 ? (
+        <InetAttention>Отсутствует подключение к интернету</InetAttention>
+      ) : (
+        <>
+          <Line>
+            {cards[0] ?? null}
+            {cards[1] ?? null}
+          </Line>
+          <Line>
+            {cards[2] ?? null}
+            {cards[3] ?? null}
+          </Line>
+        </>
+      )}
     </CardHolderWrapper>
   );
 };

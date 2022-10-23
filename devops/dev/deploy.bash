@@ -1,3 +1,5 @@
+# Билдим backend
+# docker build -t "backend-api" ~/thousandwords/backend 
 # Билдим статику
 npm run build --prefix ~/thousandwords/frontend # TEST
 

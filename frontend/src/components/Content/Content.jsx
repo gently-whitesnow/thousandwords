@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { ContentWrapper } from "./Content.styles";
+import { ContentWrapper} from "./Content.styles";
 import CardHolder from "../CardHolder";
 import LevelNumber from "../LevelNumber";
 import { useStore } from "../../store";

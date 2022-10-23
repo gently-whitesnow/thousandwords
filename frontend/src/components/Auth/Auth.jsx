@@ -13,13 +13,13 @@ const Auth = () => {
     let mail = e.target.value.trim();
 
     setEmail(mail);
-    console.log(validEmail);
+
     setValidEmail(validateEmail(mail));
   };
 
   const regex = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/;
   const validateEmail = (mail) => {
-    console.log(mail);
+
     if (regex.test(mail)) {
       return true;
     }

@@ -15,6 +15,7 @@ class WordsStore {
   wordsQueue = [];
   level = 0;
   isNative = true;
+  dontSentWordsArray = [];
 
   setIsNative = () => {
     this.isNative = !this.isNative;
@@ -23,6 +24,9 @@ class WordsStore {
   };
 
   getWords = () => {
+    console.log(this.wordsQueue.length);
+    console.log(this.dontSentWordsArray.length);
+    console.log(this.wordsQueue.map((e)=>e.word.n_lang));
     this.currentWord = this.wordsQueue.pop();
     this.tempOtherWords = this.wordsQueue.slice(0, 3);
   };
@@ -39,7 +43,7 @@ class WordsStore {
     }
   };
 
-  queueLength = 10;
+  queueLength = 20;
   getWordsHandler = () => {
     api
       .getWords(this.queueLength)
@@ -51,8 +55,6 @@ class WordsStore {
         if (this.currentWord === null || this.tempOtherWords === null) {
           this.getWords();
         }
-        console.log(this.wordsQueue);
-        console.log(this.level);
       })
       .catch((err) => {
         console.error(err);
@@ -60,14 +62,19 @@ class WordsStore {
   };
   postWordshandler = (wordId, queueWords) => {
     api
-      .postWords(wordId, 1, queueWords)
+      .postWords(
+        [wordId].concat(this.dontSentWordsArray),
+        this.queueLength - this.wordsQueue.length,
+        queueWords
+      )
       .then(({ data }) => {
-        if (data.words.length === 1) {
-          this.setWord({ word: data.words[0], count: 0 });
-        }
+        data.words?.forEach((word) => {
+          this.setWord({ word: word, count: 0 });
+        });
         this.level = data.user_level;
       })
       .catch((err) => {
+        this.dontSentWordsArray.push(wordId);
         console.error(err);
       });
   };
