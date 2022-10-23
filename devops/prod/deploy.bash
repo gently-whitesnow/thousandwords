@@ -14,6 +14,7 @@ cp -rf ~/prod/nginx.conf /etc/nginx
 docker login https://index.docker.io/v2 -u $DOCKER_LOGIN -p $DOCKER_PWD 
 
 # Запускаем сервис (перезапускаем в фоновом режиме)
+docker-compose pull
 docker-compose up --force-recreate -d
 docker image prune -f
 
