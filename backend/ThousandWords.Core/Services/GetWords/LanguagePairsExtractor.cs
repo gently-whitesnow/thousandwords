@@ -26,14 +26,13 @@ public class LanguagePairsExtractor
 
     private IEnumerable<string> GetKeysRequiredPairs()
     {
-        var idPairs = GetRequiredIdPairs();
-        return idPairs.Select(id => $"{DictionaryInfo.Name}.{id}");
+        return GetRequiredIdPairs().Select(id => $"{DictionaryInfo.Name}.{id}");
     }
 
     private IEnumerable<int> GetRequiredIdPairs()
     {
         var idPairs = new List<int>();
-        for (int i = 0; i < DictionaryInfo.PairsCount && idPairs.Count < RequiredCount; i++)
+        for (var i = 0; i < DictionaryInfo.PairsCount && idPairs.Count < RequiredCount; i++)
         {
             if (IdPairsForExclude.Contains(i) == false && User.CompletedPairs.Contains(i) == false)
             {

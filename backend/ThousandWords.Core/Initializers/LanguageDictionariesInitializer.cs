@@ -1,25 +1,19 @@
-﻿using ATI.Services.Common.Initializers;
-using ATI.Services.Common.Initializers.Interfaces;
-using JetBrains.Annotations;
+﻿using ATI.Services.Common.Initializers.Interfaces;
 using ThousandWords.Core.Interfaces.DbContexts;
 using ThousandWords.Core.Interfaces.ExternalLoaders;
 using ThousandWords.Core.Models;
 
 namespace ThousandWords.Core.Initializers;
 
-[UsedImplicitly]
-[InitializeOrder(Order = InitializeOrder.Last)]
 public class LanguageDictionariesInitializer : IInitializer
 {
-    private static bool _initialized;
     private readonly ILanguageDictionariesLoader _loader;
-
     private readonly ILanguageDictionaryInfoDbContext _dictionaryInfoDbContext;
     private readonly ILanguagePairsDbContext _languagePairsDbContext;
 
     public LanguageDictionariesInitializer(
-        ILanguageDictionariesLoader loader, 
-        ILanguageDictionaryInfoDbContext dictionaryInfoDbContext, 
+        ILanguageDictionariesLoader loader,
+        ILanguageDictionaryInfoDbContext dictionaryInfoDbContext,
         ILanguagePairsDbContext languagePairsDbContext)
     {
         _loader = loader;
@@ -29,24 +23,33 @@ public class LanguageDictionariesInitializer : IInitializer
 
     public async Task InitializeAsync()
     {
-        if (_initialized)
-            return;
-
-        var operation = await _loader.LoadAsync();
-        if (operation.Success)
+        var loadOperation = await _loader.LoadAsync();
+        if (!loadOperation.Success)
         {
-            foreach (var languageDictionary in operation.Value)
+            Console.WriteLine(loadOperation.DumpAllErrors());
+            return;
+        }
+
+        foreach (var languageDictionary in loadOperation.Value)
+        {
+            var dictionaryInfo = new LanguageDictionaryInfo
             {
-                var dictionaryInfo = new LanguageDictionaryInfo
-                {
-                    Name = languageDictionary.Name,
-                    PairsCount = languageDictionary.Pairs.Count()
-                };
-                await _dictionaryInfoDbContext.InsertAsync(dictionaryInfo);
-                var a =await _languagePairsDbContext.InsertManyAsync(languageDictionary.Pairs);
+                Name = languageDictionary.Name,
+                PairsCount = languageDictionary.Pairs.Count()
+            };
+            var insertDictionaryInfoOperation = await _dictionaryInfoDbContext.InsertAsync(dictionaryInfo);
+            if (!insertDictionaryInfoOperation.Success)
+            {
+                Console.WriteLine(insertDictionaryInfoOperation.DumpAllErrors());
+                break;
             }
 
-            _initialized = true;
+            var insertDictionaryPairsOperation = await _languagePairsDbContext.InsertManyAsync(languageDictionary.Pairs);
+            if (!insertDictionaryPairsOperation.Success)
+            {
+                Console.WriteLine(insertDictionaryPairsOperation.DumpAllErrors());
+                break;
+            }
         }
     }
 
@@ -57,6 +60,6 @@ public class LanguageDictionariesInitializer : IInitializer
 
     public string InitEndConsoleMessage()
     {
-        return $"End language dictionaries initializer, result {_initialized}";
+        return "End language dictionaries initializer";
     }
 }

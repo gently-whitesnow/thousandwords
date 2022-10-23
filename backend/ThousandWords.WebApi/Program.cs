@@ -17,7 +17,6 @@ ConfigurationManager.ConfigurationRoot = new ConfigurationBuilder()
 
 builder.Services.AddOptions();
 
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => options.LoginPath = PathString.Empty);
 builder.Services.AddAuthorization();
@@ -44,10 +43,7 @@ builder.Services.AddLanguageDictionaryInitializer();
 builder.Services.AddApplicationServices();
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ConfigureHttpsDefaults(listenOptions =>
-    {
-        
-    });
+    serverOptions.ConfigureHttpsDefaults(listenOptions => { });
     serverOptions.Listen(IPAddress.Any, ConfigurationManager.GetApplicationPort());
     serverOptions.AllowSynchronousIO = true;
 });
@@ -61,10 +57,7 @@ app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.UseEndpoints(
-    endpoints =>
-    {
-        endpoints.MapControllers();
-    });
+    endpoints => { endpoints.MapControllers(); });
 
 using (var scope = app.Services.CreateScope())
 {
@@ -73,4 +66,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-

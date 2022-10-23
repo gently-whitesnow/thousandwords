@@ -1,6 +1,7 @@
 ﻿using ATI.Services.Common.Behaviors.OperationBuilder.Extensions;
 using ATI.Services.Common.Swagger;
 using Microsoft.AspNetCore.Mvc;
+using ThousandWords.Core.Models;
 using ThousandWords.Core.Models.DTO;
 using ThousandWords.Core.Services.CompleteWord;
 using ThousandWords.Core.Services.GetWords;
@@ -8,7 +9,6 @@ using ThousandWords.WebApi.Attributes;
 
 namespace ThousandWords.WebApi.Controllers;
 
-[ApiController]
 [Route("words")]
 public class WordsController : ControllerWithOpenApi
 {
@@ -31,9 +31,9 @@ public class WordsController : ControllerWithOpenApi
 
     [HttpPost]
     [CapAuthorize]
-    public async Task<IActionResult> PostWords([FromBody] WordsRequestDto requestDto)
+    public async Task<IActionResult> PostWords([FromBody] WordsRequest request)
     {
         var userKey = HttpContext.User.Identity.Name;
-        return await _completeWordService.CompleteWordAndGetWordsAsync(userKey, requestDto).AsActionResultAsync();
+        return await _completeWordService.CompleteWordAndGetWordsAsync(userKey, request).AsActionResultAsync();
     }
 }

@@ -5,5 +5,5 @@ namespace ThousandWords.Core.Interfaces.ExternalLoaders;
 
 public interface ILanguageDictionariesLoader
 {
-    public Task<OperationResult<IEnumerable<LanguageDictionary>>> LoadAsync();
+    public Task<OperationResult<List<LanguageDictionary>>> LoadAsync();
 }

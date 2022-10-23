@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ThousandWords.Core.Models.DTO;
 
-namespace ThousandWords.Core.Models.DTO;
+namespace ThousandWords.Core.Models;
 
-public class WordsResponseDto
+public class WordsResponse
 {
     [JsonProperty("user_level")]
     public int UserLevel { get; set; }

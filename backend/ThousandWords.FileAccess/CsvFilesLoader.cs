@@ -9,34 +9,32 @@ namespace ThousandWords.FileAccess;
 
 public class CsvFilesLoader : ILanguageDictionariesLoader
 {
-    private readonly string _folderPath;
-    
-    private readonly CsvFilesScanner _filesScanner = new();
-    private readonly CsvFileReader _csvFileReader = new();
-    private readonly SimpleCsvParser _csvParser = new();
-
+    private readonly FilesManagerOptions _options;
     public CsvFilesLoader(IOptions<FilesManagerOptions> options)
     {
-        var folderPath = options.Value.DictionariesFolderPath;
-        _folderPath = folderPath;
+        _options = options.Value;
     }
 
-    public async Task<OperationResult<IEnumerable<LanguageDictionary>>> LoadAsync()
+    public async Task<OperationResult<List<LanguageDictionary>>> LoadAsync()
     {
         var languageDictionaries = new List<LanguageDictionary>();
-        var fullnameFiles = _filesScanner.GetFullnameFiles(_folderPath);
+        var fullnameFiles = CsvFilesScanner.GetFullnameFiles(_options.DictionariesFolderPath);
         foreach (var fullnameFile in fullnameFiles)
         {
             var fileName = Path.GetFileNameWithoutExtension(fullnameFile);
-            var lines = await _csvFileReader.ReadAllLinesAsync(fullnameFile);
-            var languagePairs = _csvParser.GetLanguagePairs(fileName, lines.ToArray().Randomize());
+            var lines = await CsvFileReader.ReadAllLinesAsync(fullnameFile);
+            
+            var getLanguagePairsOperation = SimpleCsvParser.GetLanguagePairs(fileName, lines.ToArray().Randomize());
+            if (!getLanguagePairsOperation.Success)
+                return new OperationResult<List<LanguageDictionary>>(getLanguagePairsOperation);
+            
             languageDictionaries.Add(new LanguageDictionary
             {
                 Name = fileName,
-                Pairs = languagePairs
+                Pairs = getLanguagePairsOperation.Value
             });
         }
 
-        return new OperationResult<IEnumerable<LanguageDictionary>>(languageDictionaries);
+        return new OperationResult<List<LanguageDictionary>>(languageDictionaries);
     }
 }

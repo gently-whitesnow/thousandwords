@@ -18,30 +18,31 @@ public class CompleteWordService
         _getWordsService = getWordsService;
     }
 
-    public async Task<OperationResult<WordsResponseDto>> CompleteWordAndGetWordsAsync(string userKey, WordsRequestDto requestDto)
+    public async Task<OperationResult<WordsResponse>> CompleteWordAndGetWordsAsync(string userKey,
+        WordsRequest request)
     {
-        var userOperation = await _usersDbContext.GetUserByKeyAsync(userKey);
-        if (userOperation.Success)
+        var getUserOperation = await _usersDbContext.GetUserByKeyAsync(userKey);
+        if (!getUserOperation.Success)
         {
-            var user = userOperation.Value;
-            var updateOperation = await UpdateUserCompletedPairsAsync(user, requestDto.CompletedWordId);
-            if (updateOperation.Success)
-            {
-                return await _getWordsService.GetWordsAsync(user, requestDto.RequiredWordsCount,
-                    requestDto.SessionWordsId);
-            }
-
-            return new OperationResult<WordsResponseDto>(updateOperation);
+            return new OperationResult<WordsResponse>(getUserOperation);
+        }
+        
+        var user = getUserOperation.Value;
+        var updateOperation = await UpdateUserCompletedPairsAsync(user, request.CompletedWordId);
+        if (!updateOperation.Success)
+        {
+            return new OperationResult<WordsResponse>(updateOperation);
         }
 
-        return new OperationResult<WordsResponseDto>(userOperation);
+        return await _getWordsService.GetWordsAsync(user, request.RequiredWordsCount,
+            request.SessionWordsId);
     }
 
     private async Task<OperationResult> UpdateUserCompletedPairsAsync(User user, int completedWordId)
     {
         if (user.CompletedPairs.Contains(completedWordId))
             return new OperationResult(ActionStatus.Ok);
-        
+
         user.CompletedPairs.Add(completedWordId);
         var operation = await _usersDbContext.InsertAsync(user);
         if (operation.Success == false)
