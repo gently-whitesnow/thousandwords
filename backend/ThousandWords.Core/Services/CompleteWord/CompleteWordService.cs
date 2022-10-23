@@ -40,7 +40,7 @@ public class CompleteWordService
 
     private async Task<OperationResult> UpdateUserCompletedPairsAsync(User user, List<int> completedWordId)
     {
-        if (user.CompletedPairs.All(completedWordId.Contains))
+        if (completedWordId.All(user.CompletedPairs.Contains))
             return new OperationResult(ActionStatus.Ok);
 
         foreach (var word in completedWordId)
