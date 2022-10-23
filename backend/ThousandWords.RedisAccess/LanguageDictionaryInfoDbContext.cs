@@ -1,6 +1,5 @@
 ﻿using ATI.Services.Common.Behaviors;
 using ATI.Services.Common.Caching.Redis;
-using ATI.Services.Common.Initializers.Interfaces;
 using ThousandWords.Core.Interfaces.DbContexts;
 using ThousandWords.Core.Models;
 

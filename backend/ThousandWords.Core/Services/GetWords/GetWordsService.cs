@@ -21,34 +21,43 @@ public class GetWordsService
         _languagePairsDbContext = languagePairsDbContext;
     }
 
-    public Task<OperationResult<WordsResponseDto>> GetWordsAsync(string userKey, int requiredCount) =>
+    public Task<OperationResult<WordsResponse>> GetWordsAsync(string userKey, int requiredCount) =>
         GetWordsAsync(userKey, requiredCount, new List<int>());
 
-    public async Task<OperationResult<WordsResponseDto>> GetWordsAsync(string userKey, int requiredCount, IEnumerable<int> sessionWords)
+    private async Task<OperationResult<WordsResponse>> GetWordsAsync(string userKey, int requiredCount, IEnumerable<int> sessionWords)
     {
         var operation = await GetUserByKeyAsync(userKey);
-        if (operation.Success)
-        {
-            var user = operation.Value;
-            return await GetWordsAsync(user, requiredCount, sessionWords);
-        }
-
-        return new OperationResult<WordsResponseDto>(operation);
+        if (!operation.Success) 
+            return new OperationResult<WordsResponse>(operation);
+        
+        return await GetWordsAsync(operation.Value, requiredCount, sessionWords.ToList());
     }
 
-    public async Task<OperationResult<WordsResponseDto>> GetWordsAsync(User user, int requiredCount, IEnumerable<int> sessionWords)
+    /// <summary>
+    /// Если не получается вернуть слова пользователю, то возвращаем слова, которые он уже знает
+    /// Обрабатываем кейс, когда он почти все слова выучил
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="requiredCount"></param>
+    /// <param name="sessionWords"></param>
+    /// <returns></returns>
+    public async Task<OperationResult<WordsResponse>> GetWordsAsync(User user, int requiredCount, List<int> sessionWords)
     {
-        var dictionaryInfoOperation = await GetDictionaryInfoAsync(user);
-        if (dictionaryInfoOperation.Success)
-        {
-            var dictionaryInfo = dictionaryInfoOperation.Value;
-            return await GetResponseDtoAsync(user, dictionaryInfo, sessionWords, requiredCount);
-        }
-
-        return new OperationResult<WordsResponseDto>(dictionaryInfoOperation);
+        var getDictionaryInfoOperation = await GetDictionaryInfoAsync(user.LanguageDictionaryName);
+        if (!getDictionaryInfoOperation.Success) 
+            return new OperationResult<WordsResponse>(getDictionaryInfoOperation);
+        
+        var getWordsOperation = await GetResponseDtoAsync(user, getDictionaryInfoOperation.Value, sessionWords, requiredCount);
+        if (!getWordsOperation.Success)
+            return new OperationResult<WordsResponse>(getWordsOperation);
+        if (getWordsOperation.Value.Words.Any())
+            return getWordsOperation;
+        // Представляем что пользователь ничего не выучил, чтобы дать ему доиграть
+        user.CompletedPairs = new HashSet<int>();
+        return await GetResponseDtoAsync(user, getDictionaryInfoOperation.Value, sessionWords, requiredCount);
     }
 
-    private async Task<OperationResult<WordsResponseDto>> GetResponseDtoAsync(User user,
+    private async Task<OperationResult<WordsResponse>> GetResponseDtoAsync(User user,
         LanguageDictionaryInfo dictionaryInfo, IEnumerable<int> excludedWords, int requiredCount)
     {
         var extractor = LanguagePairsExtractorBuilder
@@ -58,22 +67,18 @@ public class GetWordsService
             .SetLanguageDictionaryInfo(dictionaryInfo)
             .SetRequiredCount(requiredCount)
             .Build();
-        var operation = await extractor.ExtractAsync();
-        if (operation.Success)
+        var getWordsOperation = await extractor.ExtractAsync();
+        if (!getWordsOperation.Success)
+            return new OperationResult<WordsResponse>(getWordsOperation);
+        
+        return new OperationResult<WordsResponse>(new WordsResponse
         {
-            var pairs = operation.Value;
-            var responseDto = new WordsResponseDto
-            {
-                UserLevel = user.CompletedPairs.Count,
-                Words = pairs.Select(MapPairToDto)
-            };
-            return new OperationResult<WordsResponseDto>(responseDto);
-        }
-
-        return new OperationResult<WordsResponseDto>(operation);
+            UserLevel = user.CompletedPairs.Count,
+            Words = getWordsOperation.Value.Select(MapPairToDto)
+        });
     }
 
-    private LanguagePairDto MapPairToDto(LanguagePair pair)
+    private static LanguagePairDto MapPairToDto(LanguagePair pair)
     {
         return new LanguagePairDto
         {
@@ -88,9 +93,8 @@ public class GetWordsService
         return _usersDbContext.GetUserByKeyAsync(userKey);
     }
 
-    private Task<OperationResult<LanguageDictionaryInfo>> GetDictionaryInfoAsync(User user)
+    private Task<OperationResult<LanguageDictionaryInfo>> GetDictionaryInfoAsync(string languageDictionaryName)
     {
-        var dictionaryName = user.LanguageDictionaryName;
-        return _dictionaryInfoDbContext.GetLanguageDictionaryByNameAsync(dictionaryName);
+        return _dictionaryInfoDbContext.GetLanguageDictionaryByNameAsync(languageDictionaryName);
     }
 }

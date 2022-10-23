@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace ThousandWords.Core.Models.DTO;
+namespace ThousandWords.Core.Models;
 
-public class WordsRequestDto
+public class WordsRequest
 {
     [JsonProperty("word_id")]
     public int CompletedWordId { get; set; }

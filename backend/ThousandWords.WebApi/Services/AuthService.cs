@@ -17,36 +17,28 @@ public class AuthService
         _usersDbContext = usersDbContext;
     }
 
-    public async Task<OperationResult> AuthUser(HttpContext httpContext, UserDto userDto)
+    public async Task<OperationResult<ClaimsPrincipal>> AuthUser(UserDto userDto)
     {
         var userKeyOperation = await GetOrCreateUserKeyAsync(userDto.Email, userDto.LanguageDictionaryName);
-        if (userKeyOperation.Success)
-        {
-            var userKey = userKeyOperation.Value;
-            var claimsPrincipal = GetClaimsPrincipal(userKey);
-            await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-            return new OperationResult(ActionStatus.Ok);
-        }
-
-        return new OperationResult(userKeyOperation);
+        return userKeyOperation.Success
+            ? new OperationResult<ClaimsPrincipal>(GetClaimsPrincipal(userKeyOperation.Value))
+            : new OperationResult<ClaimsPrincipal>(userKeyOperation);
     }
 
     private async Task<OperationResult<string>> GetOrCreateUserKeyAsync(string email, string dictionary)
     {
         var userKey = User.GetKey(dictionary, email);
         var checkKeyOperation = await IsExistsUserKeyAsync(userKey);
-        if (checkKeyOperation.Success)
-        {
-            if (checkKeyOperation.Value)
-                return new OperationResult<string>(userKey);
+        if (!checkKeyOperation.Success) 
+            return new OperationResult<string>(checkKeyOperation);
+        
+        if (checkKeyOperation.Value)
+            return new OperationResult<string>(userKey);
 
-            var createUserOperation = await CreateUserKeyAsync(userKey, dictionary);
-            if (createUserOperation.Success)
-                return new OperationResult<string>(createUserOperation.Value);
-            return new OperationResult<string>(createUserOperation);
-        }
-
-        return new OperationResult<string>(checkKeyOperation);
+        var createUserOperation = await CreateUserKeyAsync(userKey, dictionary);
+        return createUserOperation.Success
+            ? new OperationResult<string>(createUserOperation.Value)
+            : new OperationResult<string>(createUserOperation);
     }
 
     private async Task<OperationResult<string>> CreateUserKeyAsync(string userKey, string dictionary)
@@ -58,10 +50,11 @@ public class AuthService
             CompletedPairs = new HashSet<int>()
         };
 
-        var operation = await _usersDbContext.InsertAsync(user);
-        if (operation.Success)
-            return new OperationResult<string>(user.GetKey());
-        return new OperationResult<string>(operation);
+        var insertOperation = await _usersDbContext.InsertAsync(user);
+
+        return insertOperation.Success
+            ? new OperationResult<string>(user.GetKey())
+            : new OperationResult<string>(insertOperation);
     }
 
     private Task<OperationResult<bool>> IsExistsUserKeyAsync(string userKey)
@@ -69,18 +62,16 @@ public class AuthService
         return _usersDbContext.KeyExistsAsync(userKey);
     }
 
-    private ClaimsPrincipal GetClaimsPrincipal(string userKey)
+    private static ClaimsPrincipal GetClaimsPrincipal(string userKey)
     {
         var claims = new List<Claim>
         {
             new(ClaimsIdentity.DefaultNameClaimType, userKey)
         };
-        var claimsIdentity = new ClaimsIdentity(
-            claims, 
-            "ApplicationCookie", 
+        return new ClaimsPrincipal(new ClaimsIdentity(
+            claims,
+            "ApplicationCookie",
             ClaimsIdentity.DefaultNameClaimType,
-            ClaimsIdentity.DefaultRoleClaimType);
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        return claimsPrincipal;
+            ClaimsIdentity.DefaultRoleClaimType));
     }
 }
