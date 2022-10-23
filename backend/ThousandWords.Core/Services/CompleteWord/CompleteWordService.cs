@@ -28,7 +28,7 @@ public class CompleteWordService
         }
         
         var user = getUserOperation.Value;
-        var updateOperation = await UpdateUserCompletedPairsAsync(user, request.CompletedWordId);
+        var updateOperation = await UpdateUserCompletedPairsAsync(user, request.CompletedWordIds);
         if (!updateOperation.Success)
         {
             return new OperationResult<WordsResponse>(updateOperation);
@@ -38,15 +38,24 @@ public class CompleteWordService
             request.SessionWordsId);
     }
 
-    private async Task<OperationResult> UpdateUserCompletedPairsAsync(User user, int completedWordId)
+    private async Task<OperationResult> UpdateUserCompletedPairsAsync(User user, List<int> completedWordId)
     {
-        if (user.CompletedPairs.Contains(completedWordId))
+        if (user.CompletedPairs.All(completedWordId.Contains))
             return new OperationResult(ActionStatus.Ok);
 
-        user.CompletedPairs.Add(completedWordId);
+        foreach (var word in completedWordId)
+        {
+            user.CompletedPairs.Add(word);
+        }
         var operation = await _usersDbContext.InsertAsync(user);
-        if (operation.Success == false)
-            user.CompletedPairs.Remove(completedWordId);
+        if (operation.Success)
+            return operation;
+        
+        foreach (var word in completedWordId)
+        {
+            user.CompletedPairs.Remove(word);
+        }
+
         return operation;
     }
 }
