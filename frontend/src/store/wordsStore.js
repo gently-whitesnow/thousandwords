@@ -17,6 +17,11 @@ class WordsStore {
   isNative = true;
   dontSentWordsArray = [];
 
+  //Слово которое пришло в post запросе
+  //Добавляется в очередь, только полсе ответа пользователя
+  //Чтобы observable не менял очередь в момент прихода ответа
+  pendingWords = [];
+
   setIsNative = () => {
     this.isNative = !this.isNative;
     this.setWord(this.currentWord);
@@ -26,12 +31,17 @@ class WordsStore {
   getWords = () => {
     console.log(this.wordsQueue.length);
     console.log(this.dontSentWordsArray.length);
-    console.log(this.wordsQueue.map((e)=>e.word.n_lang));
+    console.log(this.wordsQueue.map((e) => e.word.n_lang));
     this.currentWord = this.wordsQueue.pop();
     this.tempOtherWords = this.wordsQueue.slice(0, 3);
   };
 
   setWord = (wordentity) => {
+    this.pendingWords.slice().forEach((e) => {
+      this.wordsQueue.push({ word: e, count: 0 });
+    });
+    this.pendingWords = [];
+
     shuffle(this.wordsQueue);
     if (wordentity.count === 3) {
       this.postWordshandler(
@@ -68,9 +78,7 @@ class WordsStore {
         queueWords
       )
       .then(({ data }) => {
-        data.words?.forEach((word) => {
-          this.setWord({ word: word, count: 0 });
-        });
+        this.pendingWords = data.words;
         this.level = data.user_level;
       })
       .catch((err) => {

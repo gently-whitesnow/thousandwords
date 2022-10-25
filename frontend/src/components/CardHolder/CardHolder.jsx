@@ -5,7 +5,6 @@ import { useStore } from "../../store";
 import { shuffle } from "../../store/wordsStore";
 import Card from "../Card";
 
-
 const CardHolder = () => {
   const { wordsStore } = useStore();
   const {
@@ -90,7 +89,7 @@ const CardHolder = () => {
 
   return (
     <CardHolderWrapper>
-      {wordsQueue.length <= 3 ? (
+      {wordsQueue.length <= 3 && wordsQueue.length > 0 ? (
         <InetAttention>Отсутствует подключение к интернету</InetAttention>
       ) : (
         <>
