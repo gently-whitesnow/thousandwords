@@ -76,14 +76,14 @@ export const CardWrapper = styled.div`
   flex-direction: column;
 
   color: white;
-  font-size: 40px;
+  font-size: 37px;
   text-align: center;
   @media (max-width: 768px) {
     font-size: 20px;
     margin-inline: 20px;
   }
   @media (max-width: 1024px) {
-    font-size: 30px;
+    font-size: 28px;
   }
 `;
 
