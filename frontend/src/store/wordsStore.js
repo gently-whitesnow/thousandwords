@@ -86,6 +86,7 @@ class WordsStore {
       )
       .then(({ data }) => {
         if (this.loading) {
+          // eslint-disable-next-line array-callback-return
           data.words.map((e) => {
             this.wordsQueue.push({ word: e, count: 0 });
           });
