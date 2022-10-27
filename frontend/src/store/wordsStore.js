@@ -16,6 +16,11 @@ class WordsStore {
   level = 0;
   isNative = true;
   dontSentWordsArray = [];
+  loading = false;
+
+  setLoading = (result) => {
+    this.loading = result;
+  };
 
   //Слово которое пришло в post запросе
   //Добавляется в очередь, только полсе ответа пользователя
@@ -29,9 +34,9 @@ class WordsStore {
   };
 
   getWords = () => {
-    console.log(this.wordsQueue.length);
-    console.log(this.dontSentWordsArray.length);
-    console.log(this.wordsQueue.map((e) => e.word.n_lang));
+    console.log(this.wordsQueue?.length);
+    console.log(this.dontSentWordsArray?.length);
+    console.log(this.wordsQueue?.map((e) => e.word.n_lang));
     this.currentWord = this.wordsQueue.pop();
     this.tempOtherWords = this.wordsQueue.slice(0, 3);
   };
@@ -44,7 +49,7 @@ class WordsStore {
 
     shuffle(this.wordsQueue);
     if (wordentity.count === 3) {
-      this.postWordshandler(
+      this.postWordsHandler(
         wordentity.word.word_id,
         this.wordsQueue.map((e) => e.word.word_id)
       );
@@ -70,19 +75,31 @@ class WordsStore {
         console.error(err);
       });
   };
-  postWordshandler = (wordId, queueWords) => {
+  postWordsHandler = (wordId, queueWords) => {
     api
       .postWords(
-        [wordId].concat(this.dontSentWordsArray),
+        wordId != null
+          ? [wordId].concat(this.dontSentWordsArray)
+          : this.dontSentWordsArray,
         this.queueLength - this.wordsQueue.length,
         queueWords
       )
       .then(({ data }) => {
-        this.pendingWords = data.words;
+        if (this.loading) {
+          data.words.map((e) => {
+            this.wordsQueue.push({ word: e, count: 0 });
+          });
+        } else {
+          this.pendingWords = data.words;
+        }
         this.level = data.user_level;
+        this.setLoading(false);
       })
       .catch((err) => {
-        this.dontSentWordsArray.push(wordId);
+        if (wordId != null) {
+          this.dontSentWordsArray.push(wordId);
+        }
+        this.setLoading(false);
         console.error(err);
       });
   };

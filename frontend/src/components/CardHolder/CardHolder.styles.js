@@ -21,7 +21,3 @@ export const Line = styled.div`
     justify-content: space-around;
   }
 `;
-
-export const InetAttention = styled.div`
-  text-align: center;
-`;

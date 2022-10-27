@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { CardHolderWrapper, InetAttention, Line } from "./CardHolder.styles";
+import { CardHolderWrapper, Line } from "./CardHolder.styles";
 import { useStore } from "../../store";
 import { shuffle } from "../../store/wordsStore";
 import Card from "../Card";
+import InetInfo from "../InetInfo/InetInfo";
 
 const CardHolder = () => {
   const { wordsStore } = useStore();
@@ -15,6 +16,10 @@ const CardHolder = () => {
     tempOtherWords,
     wordsQueue,
     getWordsHandler,
+    dontSentWordsArray,
+    loading,
+    setLoading,
+    postWordsHandler,
   } = wordsStore;
 
   useEffect(() => {
@@ -89,8 +94,13 @@ const CardHolder = () => {
 
   return (
     <CardHolderWrapper>
-      {wordsQueue.length <= 3 && wordsQueue.length > 0 ? (
-        <InetAttention>Отсутствует подключение к интернету</InetAttention>
+      {wordsQueue?.length <= 3 && wordsQueue?.length > 0 ? (
+        <InetInfo
+          words={dontSentWordsArray}
+          loading={loading}
+          setLoading={setLoading}
+          trySend={() => postWordsHandler(null, wordsQueue.map((e) => e.word.word_id))}
+        />
       ) : (
         <>
           <Line>
